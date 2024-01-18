@@ -23,14 +23,15 @@ runs:
   using: "composite"
   steps:
     - run: |
-        git clone https://github.com/${{ inputs.repository }} .
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        source ~/.bashrc
-        nvm install 20.10.0
-        nvm use 20.10.0
-        node --version
-        yarn install
-        yarn build
+        git clone https://github.com/${{ inputs.repository }} . &&
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &&
+        export NVM_DIR="$HOME/.nvm" &&
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+        nvm install 20.10.0 &&
+        nvm use 20.10.0 &&
+        node --version &&
+        yarn install &&
+        yarn build &&
         yarn add wrangler
       shell: bash
       env:
