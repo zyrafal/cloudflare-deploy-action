@@ -22,12 +22,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout code
+    - name: Checkout cloudflare-deploy-action
       uses: actions/checkout@v2
-    - name: List files
-      run: ls -la
+      with:
+        repository: "ubiquity/cloudflare-deploy-action"
+        path: "cloudflare-deploy-action"
+    - name: List files in cloudflare-deploy-action
+      run: ls -la cloudflare-deploy-action
       shell: bash
-    - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
+    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
       env:
         SUPABASE_URL: ${{ inputs.supabase_url }}
