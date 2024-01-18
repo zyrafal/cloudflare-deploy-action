@@ -4,12 +4,6 @@ inputs:
   cloudflare_api_token:
     description: "Cloudflare API Token"
     required: true
-  supabase_url:
-    description: "Supabase URL"
-    required: true
-  supabase_key:
-    description: "Supabase Key"
-    required: true
   repository:
     description: 'The GitHub repository to deploy, in the format "organization/repository"'
     required: true
@@ -38,6 +32,4 @@ runs:
     - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
       env:
-        SUPABASE_URL: ${{ inputs.supabase_url }}
-        SUPABASE_KEY: ${{ inputs.supabase_key }}
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
