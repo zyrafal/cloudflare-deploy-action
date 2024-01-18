@@ -22,34 +22,30 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
-        git clone https://github.com/${{ inputs.repository }} . &&
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &&
-        export NVM_DIR="$HOME/.nvm" &&
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
-        nvm install 20.10.0 &&
-        nvm use 20.10.0 &&
-        node --version &&
-        yarn install &&
-        yarn build &&
-        yarn add wrangler
-      shell: bash
-      env:
-        SUPABASE_URL: ${{ inputs.supabase_url }}
-        SUPABASE_KEY: ${{ inputs.supabase_key }}
-
-    - run: |
-        IFS='/' read -ra fields <<< "${{ inputs.repository }}"
-        projectName="${fields[1]//./-}"
-        echo $projectName
-        yarn wrangler pages project list > project_list.txt
-        if grep -q $projectName project_list.txt; then
-          echo "Project found"
-        else
-          echo "Project not found"
-          yarn wrangler pages project create "$projectName" --production-branch "${{ inputs.production_branch }}"
-        fi
-        yarn wrangler pages deploy "${{ inputs.output_directory }}" --project-name "$projectName"
-      shell: bash
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+  - run: |
+      git clone https://github.com/${{ inputs.repository }} . &&
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash &&
+      export NVM_DIR="$HOME/.nvm" &&
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+      nvm install 20.10.0 &&
+      nvm use 20.10.0 &&
+      node --version &&
+      yarn install &&
+      yarn build &&
+      yarn add wrangler &&
+      IFS='/' read -ra fields <<< "${{ inputs.repository }}" &&
+      projectName="${fields[1]//./-}" &&
+      echo $projectName &&
+      yarn wrangler pages project list > project_list.txt &&
+      if grep -q $projectName project_list.txt; then
+        echo "Project found"
+      else
+        echo "Project not found"
+        yarn wrangler pages project create "$projectName" --production-branch "${{ inputs.production_branch }}"
+      fi &&
+      yarn wrangler pages deploy "${{ inputs.output_directory }}" --project-name "$projectName"
+    shell: bash
+    env:
+      SUPABASE_URL: ${{ inputs.supabase_url }}
+      SUPABASE_KEY: ${{ inputs.supabase_key }}
+      CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
