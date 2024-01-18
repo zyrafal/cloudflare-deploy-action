@@ -1,0 +1,57 @@
+name: 'Cloudflare Deploy'
+description: 'Deploy to Cloudflare Pages'
+inputs:
+  cloudflare_api_token:
+    description: 'Cloudflare API Token'
+    required: true
+  repository:
+    description: 'GitHub Repository'
+    required: true
+  production_branch:
+    description: 'Production Branch'
+    required: true
+  output_directory:
+    description: 'Output Directory'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "20.10.0"
+
+    - name: Yarn Install
+      run: yarn install
+      shell: bash
+
+    - name: Build the project
+      run: yarn build
+      shell: bash
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+    - name: Wrangler Install
+      run: yarn add wrangler
+      shell: bash
+
+    - name: Publish to Cloudflare
+      run: |
+        IFS='/' read -ra fields <<< "${{ inputs.repository }}"
+        projectName="${fields[1]//./-}"
+        echo $projectName
+        yarn wrangler pages project list > project_list.txt
+        if grep -q $projectName project_list.txt; then
+          echo "Project found"
+        else
+          echo "Project not found"
+          yarn wrangler pages project create "$projectName" --production-branch "${{ inputs.production_branch }}"
+        fi
+        yarn wrangler pages deploy "${{ inputs.output_directory }}" --project-name "$projectName"
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
