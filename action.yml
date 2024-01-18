@@ -22,6 +22,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - run: ls -la
+    shell: bash
+
   - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
     shell: bash
     env:
