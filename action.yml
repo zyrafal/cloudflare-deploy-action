@@ -1,46 +1,38 @@
-name: 'Cloudflare Deploy'
-description: 'Deploy to Cloudflare Pages'
+name: "Cloudflare Deploy"
+description: "Deploy to Cloudflare Pages"
 inputs:
   cloudflare_api_token:
-    description: 'Cloudflare API Token'
+    description: "Cloudflare API Token"
     required: true
   repository:
-    description: 'GitHub Repository'
+    description: "GitHub Repository"
     required: true
   production_branch:
-    description: 'Production Branch'
+    description: "Production Branch"
     required: true
   output_directory:
-    description: 'Output Directory'
+    description: "Output Directory"
     required: true
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: "20.10.0"
-
-    - name: Yarn Install
-      run: yarn install
+    - run: |
+        git clone https://github.com/${{ inputs.repository }} .
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        source ~/.bashrc
+        nvm install 20.10.0
+        nvm use 20.10.0
+        node --version
+        yarn install
+        yarn build
+        yarn add wrangler
       shell: bash
-
-    - name: Build the project
-      run: yarn build
-      shell: bash
+      name: Setup Environment
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
-    - name: Wrangler Install
-      run: yarn add wrangler
-      shell: bash
-
-    - name: Publish to Cloudflare
-      run: |
+    - run: |
         IFS='/' read -ra fields <<< "${{ inputs.repository }}"
         projectName="${fields[1]//./-}"
         echo $projectName
@@ -53,5 +45,6 @@ runs:
         fi
         yarn wrangler pages deploy "${{ inputs.output_directory }}" --project-name "$projectName"
       shell: bash
+      name: Deploy to Cloudflare Pages
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
