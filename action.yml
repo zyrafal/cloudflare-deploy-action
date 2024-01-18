@@ -22,12 +22,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - run: ls -la
-    shell: bash
-
-  - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
-    shell: bash
-    env:
-      SUPABASE_URL: ${{ inputs.supabase_url }}
-      SUPABASE_KEY: ${{ inputs.supabase_key }}
-      CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: List files
+      run: ls -la
+      shell: bash
+    - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
+      shell: bash
+      env:
+        SUPABASE_URL: ${{ inputs.supabase_url }}
+        SUPABASE_KEY: ${{ inputs.supabase_key }}
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
