@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get the repository, production branch, and output directory from the command line arguments
 repository=$1
