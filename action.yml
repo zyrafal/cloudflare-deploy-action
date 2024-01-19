@@ -17,7 +17,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout work.ubq.fi
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: "ubiquity/work.ubq.fi"
         path: "work.ubq.fi"
@@ -26,8 +26,10 @@ runs:
       with:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"
-    - name: List files in cloudflare-deploy-action
-      run: ls -la cloudflare-deploy-action
+    - name: Display file tree
+      run: |
+        sudo apt-get install -y tree
+        tree
       shell: bash
     - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
