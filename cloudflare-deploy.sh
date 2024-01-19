@@ -6,10 +6,6 @@ repository=$1
 production_branch=$2
 output_directory=$3
 
-# Clone the repository
-git clone "https://github.com/${repository}.git"
-cd "$(basename "${repository}")" || exit
-
 # Install Node.js and Yarn
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
@@ -18,11 +14,7 @@ nvm install 20.10.0
 nvm use 20.10.0
 node --version
 yarn install
-
-# Build the project
 yarn build
-
-# Install Wrangler
 yarn add wrangler
 
 # Get the project name by replacing '.' with '-' in the repository name
