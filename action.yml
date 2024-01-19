@@ -1,5 +1,6 @@
 name: "Cloudflare Deploy"
 description: "Deploy to Cloudflare Pages"
+
 inputs:
   cloudflare_api_token:
     description: "Cloudflare API Token"
@@ -13,16 +14,17 @@ inputs:
   output_directory:
     description: "Output Directory"
     required: true
+
 runs:
   using: "composite"
   steps:
     - name: Checkout work.ubq.fi
       uses: actions/checkout@v4
       with:
-        repository: "ubiquity/work.ubq.fi"
-        path: "work.ubq.fi"
+        repository: ${{ inputs.repository }}
+        path: ${{ inputs.repository.split('/')[1] }}
     - name: Checkout cloudflare-deploy-action
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"

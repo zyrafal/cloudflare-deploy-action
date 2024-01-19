@@ -6,6 +6,9 @@ repository=$1
 production_branch=$2
 output_directory=$3
 
+# Change directory to the repository root
+cd "$(basename "${repository}")" || exit
+
 # Install Node.js and Yarn
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
