@@ -18,11 +18,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout work.ubq.fi
+    - name: Extract repository name
+      id: repo_name
+      run: echo "::set-output name=repo::$(echo ${{ inputs.repository }} | cut -d '/' -f 2)"
+      shell: bash
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repository }}
-        path: ${{ inputs.repository.split('/')[1] }}
+        path: ${{ steps.repo_name.outputs.repo }}
     - name: Checkout cloudflare-deploy-action
       uses: actions/checkout@v4
       with:
