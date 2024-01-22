@@ -5,6 +5,12 @@ set -e
 repository=$1
 production_branch=$2
 output_directory=$3
+extra_secrets=$4
+
+# Deserialize the secrets JSON object and export each one
+for key in $(echo "$extra_secrets" | jq -r 'keys[]'); do
+  export "$key"="$(echo "$extra_secrets" | jq -r --arg key "$key" '.[$key]')"
+done
 
 # Change directory to the repository root
 cd "$(basename "${repository}")" || exit
