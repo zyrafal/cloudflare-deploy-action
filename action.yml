@@ -2,6 +2,9 @@ name: "Cloudflare Deploy"
 description: "Deploy to Cloudflare Pages"
 
 inputs:
+  cloudflare_api_token:
+    description: "Cloudflare API Token"
+    required: true
   repository:
     description: 'The GitHub repository to deploy, in the format "organization/repository"'
     required: true
@@ -11,15 +14,13 @@ inputs:
   output_directory:
     description: "Output Directory"
     required: true
-  extra_secrets:
-    description: "A serialized JSON object containing any extra secrets necessary for the specific deployment"
-    required: false
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-    - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
+    - name: Extract repository name
+      id: repo_name
+      run: echo "::set-output name=repo::$(echo ${{ inputs.repository }} | cut -d '/' -f 2)"
       shell: bash
 
     - name: Checkout repository
@@ -33,7 +34,7 @@ runs:
       with:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"
-    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.extra_secrets }}
+    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
