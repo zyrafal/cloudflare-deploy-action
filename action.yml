@@ -16,12 +16,9 @@ inputs:
     required: true
 
 runs:
-  # Docker is more efficient than running manually according to ChatGPT
-  using: "docker"
-  image: "Dockerfile"
-  args:
-    - ${{ inputs.repository }}
-    - ${{ inputs.production_branch }}
-    - ${{ inputs.output_directory }}
-  env:
-    CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+  using: "composite"
+  steps:
+    - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
