@@ -14,6 +14,9 @@ inputs:
   output_directory:
     description: "Output Directory"
     required: true
+  extra_secrets:
+    description: "A serialized JSON object containing any extra secrets necessary for the specific deployment"
+    required: false
 
 runs:
   using: "composite"
