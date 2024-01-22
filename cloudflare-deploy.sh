@@ -5,6 +5,21 @@ set -e
 repository=$1
 production_branch=$2
 output_directory=$3
+extra_secrets=$4
+# Log the extra_secrets input
+echo "extra_secrets: $extra_secrets"
+
+# Check if the extra_secrets input is a valid JSON object
+if echo "$extra_secrets" | jq . >/dev/null 2>&1; then
+  # Deserialize the secrets JSON object and export each one
+  for key in $(echo "$extra_secrets" | jq -r 'keys[]'); do
+    # Log the key
+    echo "key: $key"
+    export "$key"="$(echo "$extra_secrets" | jq -r --arg key "$key" '.[$key]')"
+  done
+else
+  echo "Warning: extra_secrets input is not a valid JSON object"
+fi
 
 # Change directory to the repository root
 cd "$(basename "${repository}")" || exit

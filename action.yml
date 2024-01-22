@@ -11,6 +11,9 @@ inputs:
   output_directory:
     description: "Output Directory"
     required: true
+  extra_secrets:
+    description: "A serialized JSON object containing any extra secrets necessary for the specific deployment"
+    required: false
 
 runs:
   using: "composite"
@@ -18,5 +21,19 @@ runs:
     - uses: actions/checkout@v4
     - run: ./cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
-      # env:
-      #   CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repository }}
+        path: ${{ steps.repo_name.outputs.repo }}
+
+    - name: Checkout cloudflare-deploy-action
+      uses: actions/checkout@v4
+      with:
+        repository: "ubiquity/cloudflare-deploy-action"
+        path: "cloudflare-deploy-action"
+    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.extra_secrets }}
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
