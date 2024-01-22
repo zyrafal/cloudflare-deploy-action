@@ -6,9 +6,13 @@ repository=$1
 production_branch=$2
 output_directory=$3
 extra_secrets=$4
+# Log the extra_secrets input
+echo "extra_secrets: $extra_secrets"
 
 # Deserialize the secrets JSON object and export each one
 for key in $(echo "$extra_secrets" | jq -r 'keys[]'); do
+  # Log the key
+  echo "key: $key"
   export "$key"="$(echo "$extra_secrets" | jq -r --arg key "$key" '.[$key]')"
 done
 

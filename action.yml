@@ -25,21 +25,18 @@ runs:
       id: repo_name
       run: echo "::set-output name=repo::$(echo ${{ inputs.repository }} | cut -d '/' -f 2)"
       shell: bash
+
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repository }}
         path: ${{ steps.repo_name.outputs.repo }}
+
     - name: Checkout cloudflare-deploy-action
       uses: actions/checkout@v4
       with:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"
-    - name: Display file tree
-      run: |
-        sudo apt-get install -y tree
-        tree
-      shell: bash
     - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.extra_secrets }}
       shell: bash
       env:
