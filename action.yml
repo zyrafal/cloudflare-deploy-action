@@ -2,9 +2,6 @@ name: "Cloudflare Deploy"
 description: "Deploy to Cloudflare Pages"
 
 inputs:
-  cloudflare_api_token:
-    description: "Cloudflare API Token"
-    required: true
   repository:
     description: 'The GitHub repository to deploy, in the format "organization/repository"'
     required: true
