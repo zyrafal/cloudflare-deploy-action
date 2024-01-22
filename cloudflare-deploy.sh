@@ -16,7 +16,7 @@ export NVM_DIR="$HOME/.nvm"
 nvm install 20.10.0
 nvm use 20.10.0
 node --version
-yarn install --frozen-lockfile
+yarn install
 yarn build
 yarn add wrangler
 
