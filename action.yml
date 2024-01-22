@@ -16,25 +16,12 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
-  steps:
-    - name: Extract repository name
-      id: repo_name
-      run: echo "::set-output name=repo::$(echo ${{ inputs.repository }} | cut -d '/' -f 2)"
-      shell: bash
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        repository: ${{ inputs.repository }}
-        path: ${{ steps.repo_name.outputs.repo }}
-
-    - name: Checkout cloudflare-deploy-action
-      uses: actions/checkout@v4
-      with:
-        repository: "ubiquity/cloudflare-deploy-action"
-        path: "cloudflare-deploy-action"
-    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
-      shell: bash
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+  # Docker is more efficient than running manually according to ChatGPT
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.repository }}
+    - ${{ inputs.production_branch }}
+    - ${{ inputs.output_directory }}
+  env:
+    CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
