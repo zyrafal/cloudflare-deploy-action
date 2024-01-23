@@ -20,20 +20,21 @@ runs:
   steps:
     - name: Extract repository name
       id: repo_name
-      run: echo "::set-output name=repo::$(echo ${{ inputs.repository }} | cut -d '/' -f 2)"
+      run: echo "repo=$(echo ${{ inputs.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
       shell: bash
 
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repository }}
-        path: ${{ steps.repo_name.outputs.repo }}
+        path: ${{ env.repo }}
 
     - name: Checkout cloudflare-deploy-action
       uses: actions/checkout@v4
       with:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"
+
     - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
       env:
