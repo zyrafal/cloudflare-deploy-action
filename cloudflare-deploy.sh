@@ -33,5 +33,7 @@ else
   yarn wrangler pages project create "$projectName" --production-branch "$production_branch"
 fi
 
+git status
+
 # Deploy the project
-yarn wrangler pages deploy "$output_directory" --project-name "$projectName"
+yarn wrangler pages deploy "$output_directory" --project-name "$projectName" --commit-dirty=true
