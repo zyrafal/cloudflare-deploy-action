@@ -26,8 +26,7 @@ projectName="${fields[1]//./-}"
 echo "$projectName"
 
 # Check if the project already exists
-yarn wrangler pages project list >project_list.txt
-if grep -q "$projectName" project_list.txt; then
+if yarn wrangler pages project list | grep -q "$projectName"; then
   echo "Project found"
 else
   echo "Project not found"
