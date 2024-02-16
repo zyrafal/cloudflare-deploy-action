@@ -35,6 +35,17 @@ runs:
         repository: "ubiquity/cloudflare-deploy-action"
         path: "cloudflare-deploy-action"
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20.10.0"
+
+    - name: Install Yarn and Wrangler
+      run: |
+        yarn install
+        yarn add wrangler
+      shell: bash
+
     - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
       shell: bash
       env:
