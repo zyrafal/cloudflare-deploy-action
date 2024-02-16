@@ -14,6 +14,10 @@ inputs:
   output_directory:
     description: "Output Directory"
     required: true
+  is_production:
+    description: "Deploys to production environment if true, otherwise deploys to preview environment. Default is false."
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -46,7 +50,7 @@ runs:
         yarn add wrangler
       shell: bash
 
-    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }}
+    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}

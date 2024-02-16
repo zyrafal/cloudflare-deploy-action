@@ -5,6 +5,7 @@ set -e
 repository=$1
 production_branch=$2
 output_directory=$3
+is_production=$4
 
 # Change directory to the repository root
 cd "$(basename "${repository}")" || exit
@@ -23,4 +24,10 @@ else
 fi
 
 # Deploy the project
-yarn wrangler pages deploy "$output_directory" --project-name "$projectName" --commit-dirty=true
+if [ "$is_production" = "true" ]; then
+  echo "Deploying to production"
+  yarn wrangler pages deploy "$output_directory" --project-name "$projectName" --commit-dirty=true
+else
+  echo "Deploying a preview"
+  yarn wrangler pages preview "$output_directory" --project-name "$projectName"
+fi
