@@ -67,6 +67,15 @@ runs:
         echo " ===== "
         ls -al ../../
         echo " ===== "
+        ls -al ../../_actions
+        echo " ===== "
+        ls -al ../../_actions/ubiquity/
+        echo " ===== "
+        ls -al ../../_actions/ubiquity/cloudflare-deploy-action/
+        echo " ===== "
+        ls -al ../../_actions/ubiquity/cloudflare-deploy-action/main
+        echo " ===== "
+        cd ../../_actions/ubiquity/cloudflare-deploy-action/main
         yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
       shell: bash
       env:
