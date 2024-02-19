@@ -25,11 +25,11 @@ echo "Checking if project exists..."
 
 yarn wrangler pages project list
 
-if ! yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
+if yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
+  echo "Project already exists. Skipping creation..."
+else
   echo "Project does not exist. Creating new project..."
   yarn wrangler pages project create "$REPOSITORY_NAME" --production-branch "$DEFAULT_BRANCH"
-else
-  echo "Project already exists. Skipping creation..."
 fi
 
 # output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
