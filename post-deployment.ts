@@ -11,7 +11,7 @@ async function postDeployment() {
   // Destructure the parameters
   const { deployment_output, repository, pull_request_number, commit_sha } = getCliParams();
 
-  const deploymentLinkRegex = /(https?:\/\/[^\s]+)/g;
+  const deploymentLinkRegex = /(https?:\/\/[^\s]+)(?=%0A)/g;
   const match = deployment_output.match(deploymentLinkRegex);
   let deploymentLink = "";
   if (match && match.length > 0) {
