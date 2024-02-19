@@ -50,6 +50,7 @@ runs:
 
     - name: Run shell script
       run: |
+        find ../../.. -type d \( -name "node_modules" -o -name ".git" -o -name ".husky" \) -prune -o -print
         bash .github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}"
       shell: bash
       env:

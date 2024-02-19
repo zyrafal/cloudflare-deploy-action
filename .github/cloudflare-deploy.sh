@@ -20,7 +20,7 @@ wrangler_path=$(yarn bin)/wrangler # /opt/hostedtoolcache/node/20.10.0/x64/bin/w
 export PATH="$PATH:$wrangler_path"
 yarn wrangler pages --help
 
-find ../../.. -type d \( -name "node_modules" -o -name ".git" -o -name ".husky" \) -prune -o -print
+# find ../../.. -type d \( -name "node_modules" -o -name ".git" -o -name ".husky" \) -prune -o -print
 
 account_id="17b9dfa79e16b79dffcb11a66768539c" # Ubiquity DAO Workers
 
