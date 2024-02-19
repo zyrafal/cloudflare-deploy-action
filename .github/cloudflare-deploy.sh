@@ -25,6 +25,8 @@ if ! yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
   yarn wrangler pages project create "$REPOSITORY_NAME" --production-branch "$DEFAULT_BRANCH"
 fi
 
-output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
-output_url="${output_url//$'\n'/%0A}"
-echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
+# output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
+# output_url="${output_url//$'\n'/%0A}"
+# echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
+
+yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true

@@ -37,11 +37,11 @@ runs:
     #     name: build-artifacts
     #     path: .
 
-    - name: Display directory structure
-      run: |
-        find .
-        find ../../_actions
-      shell: bash
+    # - name: Display directory structure
+    #   run: |
+    #     find .
+    #     find ../../_actions
+    #   shell: bash
 
     - name: Setup Node
       uses: actions/setup-node@v4
