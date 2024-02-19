@@ -1,10 +1,19 @@
+import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
+import { config } from "dotenv";
 import { getCliParams } from "./src/get-cli-params";
+config();
 
 async function postDeployment() {
+  console.trace({ ...process.env });
   // Create a new Octokit instance
   const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
+    authStrategy: createAppAuth,
+    auth: {
+      appId: process.env.APP_ID,
+      privateKey: process.env.APP_PRIVATE_KEY,
+      installationId: process.env.APP_INSTALLATION_ID,
+    },
   });
 
   // Destructure the parameters
