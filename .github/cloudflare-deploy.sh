@@ -38,26 +38,12 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
-# Create a tarball of the build directory
-tarball="deployment-$(date +%Y-%m-%d-%H-%M-%S).tar.gz"
-tar -czf "../$tarball" .
-
-# Create deployment
-response=$(curl -s -w "%{http_code}" -o /tmp/cf_response.txt --request POST \
-  --url "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$REPOSITORY_NAME/deployments" \
-  --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  --form 'files[]=@'"../$tarball"'' \
-  --form "branch=$CURRENT_BRANCH")
-
-http_status=$(tail -n1 <<< "$response")  # Extract the HTTP status code from the response
-
-# Check the response
-if [ "$http_status" -eq 200 ] || [ "$http_status" -eq 201 ]; then
-  echo "Deployment successful."
-  # Parse the response body as needed
-else
-  echo "Failed to deploy the project. HTTP status: $http_status"
-  echo "Response body:"
-  cat /tmp/cf_response.txt
-  exit 1
-fi
+#
+#
+#
+npm --version
+yarn add wrangler
+yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true
+# output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
+# output_url="${output_url//$'\n'/%0A}"
+# echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
