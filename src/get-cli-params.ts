@@ -22,25 +22,3 @@ export function getCliParams() {
   // Use the function to parse arguments
   return parseArgs(args);
 }
-
-// // Create a module to return the CLI params
-// const cliParams = (() => {
-//   // Log the command line arguments
-//   console.trace("Command line arguments:", process.argv);
-//   // Parse command line arguments
-//   const args = process.argv.slice(2);
-//   // Use the function to parse arguments
-//   const parsedArgs = parseArgs(args);
-//   return parsedArgs;
-// })();
-
-// // Extract variables from parsed arguments
-// const url = cliParams.url;
-// const repository = cliParams.repository;
-// const pullRequestNumber = cliParams.pull_request_number;
-// const commitSha = cliParams.commit_sha;
-
-// console.trace("URL:", url);
-// console.trace("Repository:", repository);
-// console.trace("Pull request number:", pullRequestNumber);
-// console.trace("Commit SHA:", commitSha);
