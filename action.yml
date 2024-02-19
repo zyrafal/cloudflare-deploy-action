@@ -56,6 +56,10 @@ runs:
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
+    - name: Display Wrangler logs
+      if: always()
+      run: cat /home/runner/.config/.wrangler/logs/*.log
+
     - name: Post Deployment on Pull Request or Commit
       run: |
         yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}" --is-production "${{ inputs.is_production }}"
