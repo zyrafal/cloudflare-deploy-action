@@ -76,6 +76,7 @@ runs:
         ls -al ../../_actions/ubiquity/cloudflare-deploy-action/main
         echo " ===== "
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
+        yarn add tsx
         yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
       shell: bash
       env:
