@@ -26,12 +26,18 @@ yarn wrangler pages project list
 echo "REPOSITORY_NAME: $REPOSITORY_NAME"
 echo "CURRENT_BRANCH: $CURRENT_BRANCH"
 
-if yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
+# Fetch the list of projects to a temporary file
+yarn wrangler pages project list > projects_list.txt
+
+# Use grep without -q to search for the repository name, and check the command's exit status
+if grep -F "$REPOSITORY_NAME" projects_list.txt; then
   echo "Project already exists. Skipping creation..."
 else
   echo "Project does not exist. Creating new project..."
   yarn wrangler pages project create "$REPOSITORY_NAME" --production-branch "$DEFAULT_BRANCH"
 fi
+
+cat projects_list.txt
 
 # output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 # output_url="${output_url//$'\n'/%0A}"
