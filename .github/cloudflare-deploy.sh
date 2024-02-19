@@ -35,11 +35,13 @@ fi
 
 if [ "$productionBuild" = "true" ]; then
   echo "Deploying to production"
-  # yarn wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true
+  yarn wrangler pages deploy --help
+  yarn wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true
   output_url=$(yarn wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
 else
   echo "Deploying to preview"
-  # yarn wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName"
+  yarn wrangler pages dev --help
+  yarn wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName"
   output_url=$(yarn wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName")
 fi
 

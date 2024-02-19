@@ -32,17 +32,6 @@ runs:
       with:
         path: ${{ inputs.repository }}
 
-    - name: Verify repository download
-      id: verify_repo
-      run: |
-        if [ -d "${{ inputs.repository }}" ]; then
-          echo "Repository ${{ inputs.repository }} was successfully downloaded."
-        else
-          echo "Failed to download the repository ${{ inputs.repository }}."
-          exit 1
-        fi
-      shell: bash
-
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
