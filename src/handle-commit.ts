@@ -23,7 +23,7 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       commit_sha,
     })
     .then(({ data }) => {
-      const botComment = data.find((comment) => comment.user.login === "ubiquibot[bot]");
+      const botComment = data.find((comment) => comment.user?.login === "ubiquibot[bot]");
       if (botComment) {
         // If bot comment exists, update it
         return octokit.repos.updateCommitComment({

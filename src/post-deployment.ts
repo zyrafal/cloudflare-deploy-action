@@ -4,9 +4,6 @@ import { handlePullRequest } from "./handle-pull-request";
 import { parseDeploymentLink } from "./parse-deployment-link";
 
 export async function postDeployment() {
-  console.trace({ ...process.env });
-  // Create a new Octokit instance
-  // Destructure the parameters
   const { deployment_output, repository, pull_request_number, commit_sha } = getCliParams();
 
   const deploymentLink = parseDeploymentLink(deployment_output);
