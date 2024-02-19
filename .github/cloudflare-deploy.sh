@@ -8,7 +8,7 @@ CURRENT_BRANCH=$4
 IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
-cd "$PROJECT" || exit
+# cd "$PROJECT" || exit
 
 echo "PROJECT: $PROJECT"
 echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
