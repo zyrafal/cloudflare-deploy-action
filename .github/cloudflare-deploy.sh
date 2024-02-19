@@ -26,17 +26,21 @@ else
   yarn wrangler pages project create "$repositoryName" --production-branch "$productionBranch"
 fi
 
-yarn wrangler --version
-npx wrangler --version
-npx wrangler --help
-npx wrangler pages --help
-npx wrangler pages deploy --help
-npx wrangler pages dev --help
+# yarn wrangler --version
+# npx wrangler --version
+# npx wrangler --help
+# npx wrangler pages --help
+# npx wrangler pages deploy --help
+# npx wrangler pages dev --help
 
 if [ "$productionBuild" = "true" ]; then
-  output_url=$(npx wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
+  echo "Deploying to production"
+  wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true
+  # output_url=$(npx wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
 else
-  output_url=$(npx wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName")
+  echo "Deploying to preview"
+  wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName"
+  # output_url=$(npx wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName")
 fi
 
 output_url="${output_url//$'\n'/%0A}"
