@@ -4,6 +4,6 @@
     "repository": "ubiquity/ts-template",
     "production_branch": "test/cd",
     "output_directory": "dist",
-    "is_production": "false"
+    "current_branch": "main"
   }
 }

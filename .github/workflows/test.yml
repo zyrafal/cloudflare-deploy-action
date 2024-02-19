@@ -13,7 +13,7 @@ jobs:
           echo "Repository: ${{ github.repository }}"
           echo "Production Branch: ${{ github.ref }}"
           echo "Output Directory: ${{ github.workspace }}"
-          echo "Is Production: ${{ github.event_name == 'push' }}"
+          echo "Current Branch: ${{ env.GITHUB_REF_NAME }}"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
@@ -24,4 +24,4 @@ jobs:
           repository: ${{ github.repository }}
           production_branch: ${{ github.ref }}
           output_directory: ${{ github.workspace }}
-          is_production: ${{ github.event_name == 'push' }}
+          current_branch: ${{ env.GITHUB_REF_NAME }}
