@@ -39,7 +39,7 @@ runs:
     - name: Run shell script
       run: |
         # find ../.. -type d \( -name "node_modules" -o -name ".git" -o -name ".husky" \) -prune -o -print
-        bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}" "${{ inputs.current_branch }}"
+        bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
