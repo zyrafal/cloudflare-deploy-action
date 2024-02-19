@@ -23,10 +23,10 @@ runs:
   using: "composite"
   steps:
 
-    - name: check env
-      run: |
-        echo "Cloudflare API Token: ${{ inputs.cloudflare_api_token }}"
-      shell: bash
+    # - name: check env
+    #   run: |
+    #     echo "Cloudflare API Token: ${{ inputs.cloudflare_api_token }}"
+    #   shell: bash
 
     - name: Extract repository name
       id: repo_name
@@ -35,6 +35,8 @@ runs:
 
     - name: Get source code
       uses: actions/checkout@v4
+      with:
+        path: ./${{ inputs.repository }}
 
     - name: Setup Node
       uses: actions/setup-node@v4
