@@ -38,7 +38,7 @@ runs:
         yarn add wrangler tsx -g
       shell: bash
 
-    - run: ./cloudflare-deploy-action/.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
+    - run: ./.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
