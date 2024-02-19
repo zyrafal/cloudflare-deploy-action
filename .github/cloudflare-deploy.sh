@@ -8,11 +8,13 @@ builtProjectDirectory=$3
 
 # Extract the organization name and repository name from the repository variable
 IFS='/' read -ra fields <<<"$repository"
-organizationName="${fields[0]}"
+# organizationName="${fields[0]}"
 repositoryName="${fields[1]}"
 
+repositoryName=${repositoryName//./-}
+
 # Change directory to the repository root
-cd "$organizationName/$repositoryName" || exit
+cd "$repository" || exit
 
 yarn add wrangler -d --frozen-lockfile
 # wrangler_path=$(yarn bin)/wrangler # /opt/hostedtoolcache/node/20.10.0/x64/bin/wrangler
@@ -23,7 +25,7 @@ if ! yarn wrangler pages project list | grep -q "$repositoryName"; then
   yarn wrangler pages project create "$repositoryName" --production-branch "$productionBranch"
 fi
 
-output_url=$(yarn wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --branch "$productionBranch" --commit-dirty=true)
+output_url=$(yarn wrangler pages publish "$builtProjectDirectory" --project-name "$repositoryName" --branch "$productionBranch" --commit-dirty=true)
 
 output_url="${output_url//$'\n'/%0A}"
 echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
