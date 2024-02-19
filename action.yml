@@ -17,36 +17,23 @@ inputs:
   current_branch:
     description: "Compare if not production branch for preview deploys"
     required: true
+  pull_request_number:
+    description: "Pull request number for posting the deployment link"
+    required: false
+  commit_sha:
+    description: "Commit SHA for posting the deployment link"
+    required: false
 
 runs:
   using: "composite"
   steps:
-    # - name: Extract repository name
-    #   id: repo_name
-    #   run: echo "REPOSITORY_NAME=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
-    #   shell: bash
-
-    # - name: Get source code
-    #   uses: actions/checkout@v4
-    #   with:
-    #     path: ${{ inputs.repository }}
-
-    # - name: Download preserved directory
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: build-artifacts
-    #     path: .
-
-    # - name: Display directory structure
-    #   run: |
-    #     find .
-    #     find ../../_actions
-    #   shell: bash
-
-    # - name: Setup Node
-    #   uses: actions/setup-node@v4
-    #   with:
-    #     node-version: "20.10.0"
+    - name: Check for pull_request_number or commit_sha
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.pull_request_number }}" ] && [ -z "${{ inputs.commit_sha }}" ]; then
+          echo "Error: Either pull_request_number or commit_sha must be provided."
+          exit 1
+        fi
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
@@ -54,32 +41,11 @@ runs:
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
-    # - name: Display Wrangler logs
-    #   if: always()
-    #   run: cat /home/runner/.config/.wrangler/logs/*.log
-    #   shell: bash
-
     - name: Post Deployment on Pull Request or Commit
       run: |
-        # ls -al
-        # echo " ===== "
-        # ls -al ../
-        # echo " ===== "
-        # ls -al ../../
-        # echo " ===== "
-        # ls -al ../../_actions
-        # echo " ===== "
-        # ls -al ../../_actions/ubiquity/
-        # echo " ===== "
-        # ls -al ../../_actions/ubiquity/cloudflare-deploy-action/
-        # echo " ===== "
-        # ls -al ../../_actions/ubiquity/cloudflare-deploy-action/main
-        # echo " ===== "
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
         yarn add tsx -D
-        echo "POST DEPLOYMENT TS START"
-        yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
-        echo "POST DEPLOYMENT TS FINISHED"
+        yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}" --pull_request_number "${{ inputs.pull_request_number }}" --commit_sha "${{ inputs.commit_sha }}"
       shell: bash
-      env:
-        DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}"
+      # env:
+        # DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}"

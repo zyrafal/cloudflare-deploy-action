@@ -1,32 +1,44 @@
-/**
- * This is a test for now, but it will be used to run post-deployment tasks
- */
+import { Octokit } from "@octokit/rest";
+import { getCliParams } from "./src/get-cli-params";
 
-// Import the process module from Node.js to access command line arguments
-import process from "process";
+async function postDeployment() {
+  // Create a new Octokit instance
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+  });
 
-// Log the command line arguments
-console.trace("Command line arguments:", process.argv);
-// Parse command line arguments
-const args = process.argv.slice(2);
+  // Destructure the parameters
+  const { url, repository, pull_request_number, commit_sha } = getCliParams();
 
-// Define a function to parse arguments into an object
-function parseArgs(args) {
-  const argObject = {};
-  for (let i = 0; i < args.length; i += 2) {
-    const key = args[i].replace("--", "");
-    const value = args[i + 1];
-    argObject[key] = value;
+  // Split the repository into owner and repo
+  const [owner, repo] = repository.split("/");
+
+  // Check if pull request number is provided
+  if (pull_request_number) {
+    // Post a comment on the pull request
+    octokit.pulls
+      .createReview({
+        owner,
+        repo,
+        pull_number: Number(pull_request_number),
+        body: `Deployment has been done! Here is the [link](${url})`,
+      })
+      .catch(console.error);
+  } else if (commit_sha) {
+    // Post a comment on the commit
+    octokit.repos
+      .createCommitComment({
+        owner,
+        repo,
+        commit_sha,
+        body: `Deployment has been done! Here is the [link](${url})`,
+      })
+      .catch(console.error);
+  } else {
+    console.error("Either pull_request_number or commit_sha must be provided.");
   }
-  return argObject;
 }
 
-// Use the function to parse arguments
-const parsedArgs = parseArgs(args);
-
-// Extract variables from parsed arguments
-const url = parsedArgs.url;
-const repository = parsedArgs.repository;
-
-console.trace("URL:", url);
-console.trace("Repository:", repository);
+postDeployment()
+  .then(() => console.log("Post deployment tasks have been completed."))
+  .catch(console.error);
