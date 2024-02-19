@@ -28,6 +28,10 @@ fi
 
 yarn wrangler --version
 npx wrangler --version
+npx wrangler --help
+npx wrangler pages --help
+npx wrangler pages deploy --help
+npx wrangler pages dev --help
 
 if [ "$productionBuild" = "true" ]; then
   output_url=$(npx wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
