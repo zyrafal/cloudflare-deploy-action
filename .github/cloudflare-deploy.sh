@@ -14,9 +14,10 @@ echo "PROJECT: $PROJECT"
 echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
 echo "DIST: $DIST"
 
-
-
-
+echo "hard coding repository name for testing"
+echo "before REPOSITORY_NAME: $REPOSITORY_NAME"
+REPOSITORY_NAME="ts-template"
+echo "after REPOSITORY_NAME: $REPOSITORY_NAME"
 
 yarn add wrangler -D --frozen-lockfile
 echo "Checking if project exists..."
@@ -27,7 +28,7 @@ echo "REPOSITORY_NAME: $REPOSITORY_NAME"
 echo "CURRENT_BRANCH: $CURRENT_BRANCH"
 
 # Fetch the list of projects to a temporary file
-yarn wrangler pages project list > projects_list.txt
+yarn wrangler pages project list >projects_list.txt
 
 # Use grep without -q to search for the repository name, and check the command's exit status
 if grep -F "$REPOSITORY_NAME" projects_list.txt; then
