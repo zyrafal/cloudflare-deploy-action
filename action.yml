@@ -23,6 +23,15 @@ inputs:
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: false
+  app_private_key:
+    description: "App Private Key"
+    required: true
+  app_id:
+    description: "App ID"
+    required: true
+  app_installation_id:
+    description: "App Installation ID"
+    required: true
 
 runs:
   using: "composite"
@@ -48,10 +57,6 @@ runs:
         yarn tsx post-deployment.ts --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" --repository "${{ inputs.repository }}" --pull_request_number "${{ inputs.pull_request_number }}" --commit_sha "${{ inputs.commit_sha }}"
       shell: bash
       env:
-        APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-        APP_ID: ${{ secrets.APP_ID }}
-        APP_INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
-        TEST_TEMPLATE: ${{ secrets.TEST_TEMPLATE }}
-        TEST_CLOUDFLARE_DEPLOY: ${{ secrets.TEST_CLOUDFLARE_DEPLOY }}
-      # env:
-        # DEPLOYMENT_OUTPUT: "${{ env.DEPLOYMENT_OUTPUT }}"
+        APP_PRIVATE_KEY: ${{ inputs.app_private_key }}
+        APP_ID: ${{ inputs.app_id }}
+        APP_INSTALLATION_ID: ${{ inputs.app_installation_id }}
