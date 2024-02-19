@@ -14,16 +14,17 @@ echo "PROJECT: $PROJECT"
 echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
 echo "DIST: $DIST"
 
-ls
-ls "$DIST"
 
-echo "CURRENT_BRANCH: $CURRENT_BRANCH"
-echo "REPOSITORY_NAME: $REPOSITORY_NAME"
+
+
 
 yarn add wrangler -D --frozen-lockfile
 echo "Checking if project exists..."
 
 yarn wrangler pages project list
+
+echo "REPOSITORY_NAME: $REPOSITORY_NAME"
+echo "CURRENT_BRANCH: $CURRENT_BRANCH"
 
 if yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
   echo "Project already exists. Skipping creation..."
