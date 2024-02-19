@@ -60,8 +60,7 @@ runs:
     #   shell: bash
 
     - name: Post Deployment on Pull Request or Commit
-      run: |
-        yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
+      run: yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
       shell: bash
       env:
-        DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}
+        DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}"
