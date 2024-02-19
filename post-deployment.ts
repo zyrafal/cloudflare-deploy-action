@@ -27,8 +27,6 @@ const parsedArgs = parseArgs(args);
 // Extract variables from parsed arguments
 const url = parsedArgs.url;
 const repository = parsedArgs.repository;
-const isProduction = parsedArgs["is-production"] === "true";
 
 console.trace("URL:", url);
 console.trace("Repository:", repository);
-console.trace("Is Production:", isProduction);
