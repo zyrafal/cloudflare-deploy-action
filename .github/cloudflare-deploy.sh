@@ -10,6 +10,12 @@ REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
 cd "$PROJECT" || exit
 
+echo "PROJECT: $PROJECT"
+echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
+echo "DIST: $DIST"
+echo "CURRENT_BRANCH: $CURRENT_BRANCH"
+echo "REPOSITORY_NAME: $REPOSITORY_NAME"
+
 yarn add wrangler -d --frozen-lockfile
 if ! yarn wrangler pages project list | grep -q "$REPOSITORY_NAME"; then
   yarn wrangler pages project create "$REPOSITORY_NAME" --production-branch "$DEFAULT_BRANCH"
