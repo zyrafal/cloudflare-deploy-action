@@ -1,4 +1,4 @@
-name: "Cloudflare Deploy"
+name: "Continuous Deployment to Cloudflare Pages"
 description: "Deploy to Cloudflare Pages"
 
 inputs:
@@ -48,7 +48,7 @@ runs:
     #   with:
     #     node-version: "20.10.0"
 
-    - name: Run shell script
+    - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
@@ -61,23 +61,25 @@ runs:
 
     - name: Post Deployment on Pull Request or Commit
       run: |
-        ls -al
-        echo " ===== "
-        ls -al ../
-        echo " ===== "
-        ls -al ../../
-        echo " ===== "
-        ls -al ../../_actions
-        echo " ===== "
-        ls -al ../../_actions/ubiquity/
-        echo " ===== "
-        ls -al ../../_actions/ubiquity/cloudflare-deploy-action/
-        echo " ===== "
-        ls -al ../../_actions/ubiquity/cloudflare-deploy-action/main
-        echo " ===== "
+        # ls -al
+        # echo " ===== "
+        # ls -al ../
+        # echo " ===== "
+        # ls -al ../../
+        # echo " ===== "
+        # ls -al ../../_actions
+        # echo " ===== "
+        # ls -al ../../_actions/ubiquity/
+        # echo " ===== "
+        # ls -al ../../_actions/ubiquity/cloudflare-deploy-action/
+        # echo " ===== "
+        # ls -al ../../_actions/ubiquity/cloudflare-deploy-action/main
+        # echo " ===== "
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
-        yarn add tsx
+        yarn add tsx -D
+        echo "POST DEPLOYMENT TS START"
         yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
+        echo "POST DEPLOYMENT TS FINISHED"
       shell: bash
       env:
         DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}"

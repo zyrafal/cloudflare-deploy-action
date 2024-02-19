@@ -6,7 +6,7 @@
 import process from "process";
 
 // Log the command line arguments
-console.log("Command line arguments:", process.argv);
+console.trace("Command line arguments:", process.argv);
 // Parse command line arguments
 const args = process.argv.slice(2);
 
@@ -29,6 +29,6 @@ const url = parsedArgs.url;
 const repository = parsedArgs.repository;
 const isProduction = parsedArgs["is-production"] === "true";
 
-console.log("URL:", url);
-console.log("Repository:", repository);
-console.log("Is Production:", isProduction);
+console.trace("URL:", url);
+console.trace("Repository:", repository);
+console.trace("Is Production:", isProduction);
