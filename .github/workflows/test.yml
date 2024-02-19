@@ -1,4 +1,4 @@
-name: Test My Custom Action
+name: Test Action Locally
 on: [push]
 
 jobs:
@@ -7,6 +7,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      - name: Log all inputs
+        run: |
+          echo "Cloudflare API Token: ${{ secrets.CLOUDFLARE_API_TOKEN  || env.CLOUDFLARE_API_TOKEN}}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Production Branch: ${{ github.ref }}"
+          echo "Output Directory: ${{ github.workspace }}"
+          echo "Is Production: ${{ github.event_name == 'push' }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || env.CLOUDFLARE_API_TOKEN }}
       - name: Run my custom action
         uses: ./ # Points to the project root where action.yml is located

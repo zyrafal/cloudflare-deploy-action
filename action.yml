@@ -22,9 +22,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - name: check env
+      run: |
+        echo "Cloudflare API Token: ${{ inputs.cloudflare_api_token }}"
+      shell: bash
+
     - name: Extract repository name
       id: repo_name
-      run: echo "repo=$(echo ${{ inputs.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
+      run: echo "repo=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
       shell: bash
 
     - name: Get source code
@@ -35,21 +41,33 @@ runs:
       with:
         node-version: "20.10.0"
 
+    - uses: actions/cache@v4
+      with:
+        path: |
+          .yarn/cache
+          .yarn/unplugged
+          .yarn/build-state.yml
+          .yarn/install-state.gz
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - name: Install Dependencies
       run: |
         npm install yarn -g
         yarn install
-        yarn add wrangler tsx
+        yarn add wrangler tsx --dev
       shell: bash
 
     - name: Run shell script
-      run: $GITHUB_ACTION_PATH/.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
+      run: bash .github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}"
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
+
     - name: Post Deployment on Pull Request or Commit
-      run: yarn tsx .github/post-deployment.ts --url ${{ env.DEPLOYMENT_URL }} --repository ${{ inputs.repository }} --is-production ${{ inputs.is_production }}
+      run: yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}" --is-production "${{ inputs.is_production }}"
       shell: bash
       # env:
-      #   DEPLOYMENT_URL: ${{ env.DEPLOYMENT_URL }}
+      #   DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}

@@ -1,10 +1,9 @@
 {
-  "ref": "refs/heads/main",
-  "after": "dummysha",
-  "repository": {
-    "name": "ts-template",
-    "owner": {
-      "name": "ubiquity"
-    }
+  "inputs": {
+    "cloudflare_api_token": "your_cloudflare_api_token_here",
+    "repository": "ubiquity/ts-template",
+    "production_branch": "test/cd",
+    "output_directory": "dist",
+    "is_production": "false"
   }
 }
