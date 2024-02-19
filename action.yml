@@ -35,7 +35,7 @@ runs:
     - name: Install Dependencies
       run: |
         yarn install
-        yarn add wrangler tsx
+        yarn add wrangler tsx -g
       shell: bash
 
     - run: ./cloudflare-deploy-action/.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
