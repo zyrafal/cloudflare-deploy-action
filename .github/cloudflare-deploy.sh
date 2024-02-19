@@ -42,19 +42,19 @@ fi
 tarball="deployment-$(date +%Y-%m-%d-%H-%M-%S).tar.gz"
 tar -czf "../$tarball" .
 
-# Deploy using the Cloudflare API
+# Create deployment
 response=$(curl -s -w "%{http_code}" -o /tmp/cf_response.txt --request POST \
   --url "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$REPOSITORY_NAME/deployments" \
   --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  --header "Content-Type: multipart/form-data" \
-  --form "branch=$CURRENT_BRANCH" \
-  --form "source=@../$tarball")
+  --form 'files[]=@'"../$tarball"'' \
+  --form "branch=$CURRENT_BRANCH")
 
-http_status=$(tail -n1 <<<"$response") # Extract the HTTP status code from the response
+http_status=$(tail -n1 <<< "$response")  # Extract the HTTP status code from the response
 
 # Check the response
 if [ "$http_status" -eq 200 ] || [ "$http_status" -eq 201 ]; then
   echo "Deployment successful."
+  # Parse the response body as needed
 else
   echo "Failed to deploy the project. HTTP status: $http_status"
   echo "Response body:"
