@@ -16,7 +16,7 @@ export async function postDeployment() {
 
   // Check if pull request number is provided
   if (pull_request_number) {
-    handlePullRequest(owner, repo, pull_request_number, deploymentLink);
+    handlePullRequest(owner, repo, pull_request_number, deploymentLink, commit_sha);
   } else if (commit_sha) {
     handleCommit(owner, repo, commit_sha, deploymentLink);
   } else {

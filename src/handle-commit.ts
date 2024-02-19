@@ -11,13 +11,36 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       installationId: process.env.APP_INSTALLATION_ID,
     },
   });
-  // Post a comment on the commit
+
+  const slicedSha = commit_sha.slice(0, 7);
+  const body = `<div align="right"><a href="${deploymentLink}"><code>${slicedSha}</code></a></div>`;
+
+  // Get all comments
   octokit.repos
-    .createCommitComment({
+    .listCommentsForCommit({
       owner,
       repo,
       commit_sha,
-      body: `Deployment has been done! Here is the [link](${deploymentLink})`,
+    })
+    .then(({ data }) => {
+      const botComment = data.find((comment) => comment.user.login === "ubiquibot[bot]");
+      if (botComment) {
+        // If bot comment exists, update it
+        return octokit.repos.updateCommitComment({
+          owner,
+          repo,
+          comment_id: botComment.id,
+          body: botComment.body + "\n" + body,
+        });
+      } else {
+        // If bot comment does not exist, create a new one
+        return octokit.repos.createCommitComment({
+          owner,
+          repo,
+          commit_sha,
+          body,
+        });
+      }
     })
     .catch(console.error);
 }
