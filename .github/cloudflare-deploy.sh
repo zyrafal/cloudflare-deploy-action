@@ -38,12 +38,9 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
-#
-#
-#
-npm --version
+
 yarn add wrangler
-yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true
+output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 # output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
-# output_url="${output_url//$'\n'/%0A}"
-# echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
+output_url="${output_url//$'\n'/%0A}"
+echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
