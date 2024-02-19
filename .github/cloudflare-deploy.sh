@@ -14,13 +14,11 @@ repositoryName="${fields[1]}"
 # Change directory to the repository root
 cd "$organizationName/$repositoryName" || exit
 
-yarn add tsx wrangler -d --frozen-lockfile
-wrangler_path=$(yarn bin)/wrangler # /opt/hostedtoolcache/node/20.10.0/x64/bin/wrangler
-export PATH="$PATH:$wrangler_path"
+yarn add wrangler -d --frozen-lockfile
+# wrangler_path=$(yarn bin)/wrangler # /opt/hostedtoolcache/node/20.10.0/x64/bin/wrangler
+# export PATH="$PATH:$wrangler_path"
 
-if yarn wrangler pages project list | grep -q "$repositoryName"; then
-  echo "Project found"
-else
+if ! yarn wrangler pages project list | grep -q "$repositoryName"; then
   echo "Project not found"
   yarn wrangler pages project create "$repositoryName" --production-branch "$productionBranch"
 fi
