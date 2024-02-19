@@ -24,31 +24,40 @@ runs:
   steps:
     - name: Extract repository name
       id: repo_name
-      run: echo "repo=$(echo ${{ inputs.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
+      run: echo "REPOSITORY_NAME=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
       shell: bash
 
     - name: Get source code
       uses: actions/checkout@v4
+      with:
+        path: ${{ inputs.repository }}
+
+    - name: Verify repository download
+      id: verify_repo
+      run: |
+        if [ -d "${{ inputs.repository }}" ]; then
+          echo "Repository ${{ inputs.repository }} was successfully downloaded."
+        else
+          echo "Failed to download the repository ${{ inputs.repository }}."
+          exit 1
+        fi
+      shell: bash
 
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: "20.10.0"
 
-    - name: Install Dependencies
-      run: |
-        yarn install
-        yarn add wrangler tsx
-      shell: bash
-
     - name: Run shell script
-      run: $GITHUB_ACTION_PATH/.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
+      run: |
+        bash .github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}"
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
     - name: Post Deployment on Pull Request or Commit
-      run: yarn tsx .github/post-deployment.ts --url ${{ env.DEPLOYMENT_URL }} --repository ${{ inputs.repository }} --is-production ${{ inputs.is_production }}
+      run: |
+        yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}" --is-production "${{ inputs.is_production }}"
       shell: bash
       # env:
-      #   DEPLOYMENT_URL: ${{ env.DEPLOYMENT_URL }}
+      #   DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}

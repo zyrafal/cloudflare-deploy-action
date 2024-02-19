@@ -7,30 +7,43 @@ productionBranch=$2
 builtProjectDirectory=$3
 productionBuild=$4
 
-# Change directory to the repository root
-cd "$(basename "${repository}")" || exit
-
-# Get the project name by replacing '.' with '-' in the repository name
+# Extract the organization name and repository name from the repository variable
 IFS='/' read -ra fields <<<"$repository"
-projectName="${fields[1]//./-}"
-echo "$projectName"
+organizationName="${fields[0]}"
+repositoryName="${fields[1]}"
 
-# Check if the project already exists
-if yarn wrangler pages project list | grep -q "$projectName"; then
+# Change directory to the repository root
+cd "$organizationName/$repositoryName" || exit
+
+yarn add tsx wrangler -d --frozen-lockfile
+wrangler_path=$(yarn bin)/wrangler # /opt/hostedtoolcache/node/20.10.0/x64/bin/wrangler
+export PATH="$PATH:$wrangler_path"
+yarn wrangler pages --help
+
+find ../../.. -type d \( -name "node_modules" -o -name ".git" -o -name ".husky" \) -prune -o -print
+
+account_id="17b9dfa79e16b79dffcb11a66768539c" # Ubiquity DAO Workers
+
+wrangler_file_path="../wrangler.toml"
+
+if grep -q "account_id" "$wrangler_file_path"; then
+  sed -i "s/account_id = \".*\"/account_id = \"$account_id\"/g" "$wrangler_file_path"
+else
+  echo "account_id = \"$account_id\"" >>"$wrangler_file_path"
+fi
+
+if yarn wrangler pages project list | grep -q "$repositoryName"; then
   echo "Project found"
 else
   echo "Project not found"
-  yarn wrangler pages project create "$projectName" --production-branch "$productionBranch"
+  yarn wrangler pages project create "$repositoryName" --production-branch "$productionBranch"
 fi
 
-# Deploy the project
 if [ "$productionBuild" = "true" ]; then
-  echo "Deploying to production"
-  output_url=$(yarn wrangler pages deploy "$builtProjectDirectory" --project-name "$projectName" --commit-dirty=true)
+  output_url=$(npx wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
 else
-  echo "Deploying a preview"
-  output_url=$(yarn wrangler pages preview "$builtProjectDirectory" --project-name "$projectName")
+  output_url=$(npx wrangler pages preview "$builtProjectDirectory" --project-name "$repositoryName")
 fi
 
 output_url="${output_url//$'\n'/%0A}"
-echo "DEPLOYMENT_URL=$output_url" >> "$GITHUB_ENV"
+# echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"

@@ -8,6 +8,7 @@
     "node": ">=20.10.0"
   },
   "scripts": {
+    "test:ci": "act -e ./test/payload.json --container-architecture linux/amd64 -W .github/workflows/test.yml -s CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN",
     "format": "run-s format:lint format:prettier format:cspell",
     "format:lint": "eslint --fix .",
     "format:prettier": "prettier --write .",
