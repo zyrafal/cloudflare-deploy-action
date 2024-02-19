@@ -43,10 +43,10 @@ runs:
     #     find ../../_actions
     #   shell: bash
 
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: "20.10.0"
+    # - name: Setup Node
+    #   uses: actions/setup-node@v4
+    #   with:
+    #     node-version: "20.10.0"
 
     - name: Run shell script
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"

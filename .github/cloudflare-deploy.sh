@@ -5,7 +5,6 @@ DEFAULT_BRANCH=$2
 DIST=$3
 CURRENT_BRANCH=$4
 
-
 IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
@@ -39,7 +38,11 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
-# Deployment
+echo "Creating a tarball of the DIST directory..."
+TARBALL="deployment-$(date +%F-%H-%M-%S).tar.gz"
+tar -czf "$TARBALL" -C "$DIST" .
+
+echo "Tarball created: $TARBALL"
 echo "Deploying project..."
 
 curl --request POST \
@@ -47,8 +50,7 @@ curl --request POST \
   --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
   --header "Content-Type: multipart/form-data" \
   --form "branch=$CURRENT_BRANCH" \
-  --form "source=@$DIST"
-
-# Note: Adjust the `source` form field to point to the actual build output or tarball as required by Cloudflare
+  --form "source=@$TARBALL" \
+  --form metadata="{\"type\":\"application/gzip\"}"
 
 echo "Deployment triggered successfully."
