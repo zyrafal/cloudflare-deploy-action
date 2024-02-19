@@ -21,24 +21,26 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Extract repository name
-      id: repo_name
-      run: echo "REPOSITORY_NAME=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
-      shell: bash
+    # - name: Extract repository name
+    #   id: repo_name
+    #   run: echo "REPOSITORY_NAME=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
+    #   shell: bash
 
     # - name: Get source code
     #   uses: actions/checkout@v4
     #   with:
     #     path: ${{ inputs.repository }}
 
-    - name: Download preserved directory
-      uses: actions/download-artifact@v4
-      with:
-        name: build-artifacts
-        path: .
+    # - name: Download preserved directory
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: build-artifacts
+    #     path: .
 
     - name: Display directory structure
-      run: find .
+      run: |
+        find .
+        find ../../_actions
       shell: bash
 
     - name: Setup Node
@@ -52,14 +54,14 @@ runs:
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
-    - name: Display Wrangler logs
-      if: always()
-      run: cat /home/runner/.config/.wrangler/logs/*.log
-      shell: bash
+    # - name: Display Wrangler logs
+    #   if: always()
+    #   run: cat /home/runner/.config/.wrangler/logs/*.log
+    #   shell: bash
 
-    - name: Post Deployment on Pull Request or Commit
-      run: |
-        yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
-      shell: bash
+    # - name: Post Deployment on Pull Request or Commit
+    #   run: |
+    #     yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
+    #   shell: bash
       # env:
       #   DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}
