@@ -27,30 +27,24 @@ runs:
       run: echo "repo=$(echo ${{ inputs.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
       shell: bash
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        repository: ${{ inputs.repository }}
-        path: ${{ env.repo }}
-
-    - name: Checkout cloudflare-deploy-action
-      uses: actions/checkout@v4
-      with:
-        repository: "ubiquity/cloudflare-deploy-action"
-        path: "cloudflare-deploy-action"
-
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: "20.10.0"
 
-    - name: Install Yarn and Wrangler
+    - name: Install Dependencies
       run: |
         yarn install
-        yarn add wrangler
+        yarn add wrangler tsx
       shell: bash
 
-    - run: ./cloudflare-deploy-action/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
+    - run: ./cloudflare-deploy-action/.github/cloudflare-deploy.sh ${{ inputs.repository }} ${{ inputs.production_branch }} ${{ inputs.output_directory }} ${{ inputs.is_production }}
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+
+    - name: Post Deployment on Pull Request or Commit
+      run: yarn tsx .github/post-deployment.ts --url ${{ env.DEPLOYMENT_URL }} --repository ${{ inputs.repository }} --is-production ${{ inputs.is_production }}
+      shell: bash
+      # env:
+      #   DEPLOYMENT_URL: ${{ env.DEPLOYMENT_URL }}
