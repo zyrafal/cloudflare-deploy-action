@@ -32,7 +32,7 @@ npx wrangler --version
 if [ "$productionBuild" = "true" ]; then
   output_url=$(npx wrangler pages deploy "$builtProjectDirectory" --project-name "$repositoryName" --commit-dirty=true)
 else
-  output_url=$(npx wrangler pages preview "$builtProjectDirectory" --project-name "$repositoryName")
+  output_url=$(npx wrangler pages dev "$builtProjectDirectory" --project-name "$repositoryName")
 fi
 
 output_url="${output_url//$'\n'/%0A}"
