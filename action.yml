@@ -59,6 +59,7 @@ runs:
     - name: Display Wrangler logs
       if: always()
       run: cat /home/runner/.config/.wrangler/logs/*.log
+      shell: bash
 
     - name: Post Deployment on Pull Request or Commit
       run: |
