@@ -26,10 +26,20 @@ runs:
       run: echo "REPOSITORY_NAME=$(echo '${{ inputs.repository }}' | cut -d '/' -f 2)" >> $GITHUB_ENV
       shell: bash
 
-    - name: Get source code
-      uses: actions/checkout@v4
+    # - name: Get source code
+    #   uses: actions/checkout@v4
+    #   with:
+    #     path: ${{ inputs.repository }}
+
+    - name: Download preserved directory
+      uses: actions/download-artifact@v2
       with:
-        path: ${{ inputs.repository }}
+        name: build-artifacts
+        path: .
+
+    - name: Display directory structure
+      run: find .
+      shell: bash
 
     - name: Setup Node
       uses: actions/setup-node@v4
