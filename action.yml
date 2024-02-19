@@ -48,17 +48,17 @@ runs:
       with:
         node-version: "20.10.0"
 
-      - name: Set Actions Path
-        id: actions_path
-        run: echo "ACTIONS_PATH=$(dirname $GITHUB_ACTION_PATH)" >> $GITHUB_ENV
-        shell: bash
+    - name: Set Actions Path
+      id: actions_path
+      run: echo "ACTIONS_PATH=$(dirname $GITHUB_ACTION_PATH)" >> $GITHUB_ENV
+      shell: bash
 
-      - name: Run shell script
-        run: |
-          bash $ACTIONS_PATH/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}"
-        shell: bash
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+    - name: Run shell script
+      run: |
+        bash $ACTIONS_PATH/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.is_production }}"
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
     # - name: Run shell script
     #   run: |
