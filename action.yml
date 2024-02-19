@@ -61,9 +61,13 @@ runs:
 
     - name: Post Deployment on Pull Request or Commit
       run: |
-        find / -name 'post-deployment.ts'
-        # -exec yarn tsx {} \;
-        yarn tsx .github/post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
+        ls -al
+        echo " ===== "
+        ls -al ../
+        echo " ===== "
+        ls -al ../../
+        echo " ===== "
+        yarn tsx post-deployment.ts --url "${{ env.DEPLOYMENT_URL }}" --repository "${{ inputs.repository }}"
       shell: bash
       env:
         DEPLOYMENT_URL: "${{ env.DEPLOYMENT_URL }}"

@@ -9,14 +9,14 @@ IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
 
-echo "PROJECT: $PROJECT"
-echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
-echo "DIST: $DIST"
+# echo "PROJECT: $PROJECT"
+# echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
+# echo "DIST: $DIST"
 
-echo "Hard coding repository name for testing"
-echo "Before REPOSITORY_NAME: $REPOSITORY_NAME"
-REPOSITORY_NAME="ts-template"
-echo "After REPOSITORY_NAME: $REPOSITORY_NAME"
+# echo "Hard coding repository name for testing"
+# echo "Before REPOSITORY_NAME: $REPOSITORY_NAME"
+# REPOSITORY_NAME="ts-template"
+# echo "After REPOSITORY_NAME: $REPOSITORY_NAME"
 
 echo "Checking if project exists..."
 
