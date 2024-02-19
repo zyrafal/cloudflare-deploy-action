@@ -38,19 +38,26 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
-echo "Creating a tarball of the DIST directory..."
-TARBALL="deployment-$(date +%F-%H-%M-%S).tar.gz"
-tar -czf "$TARBALL" -C "$DIST" .
+# Create a tarball of the build directory
+tarball="deployment-$(date +%Y-%m-%d-%H-%M-%S).tar.gz"
+tar -czf "../$tarball" .
 
-echo "Tarball created: $TARBALL"
-echo "Deploying project..."
-
-curl --request POST \
+# Deploy using the Cloudflare API
+response=$(curl -s -w "%{http_code}" -o /tmp/cf_response.txt --request POST \
   --url "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$REPOSITORY_NAME/deployments" \
   --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
   --header "Content-Type: multipart/form-data" \
   --form "branch=$CURRENT_BRANCH" \
-  --form "source=@$TARBALL" \
-  --form metadata="{\"type\":\"application/gzip\"}"
+  --form "source=@../$tarball")
 
-echo "Deployment triggered successfully."
+http_status=$(tail -n1 <<<"$response") # Extract the HTTP status code from the response
+
+# Check the response
+if [ "$http_status" -eq 200 ] || [ "$http_status" -eq 201 ]; then
+  echo "Deployment successful."
+else
+  echo "Failed to deploy the project. HTTP status: $http_status"
+  echo "Response body:"
+  cat /tmp/cf_response.txt
+  exit 1
+fi
