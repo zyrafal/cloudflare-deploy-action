@@ -1,0 +1,10 @@
+{
+  "ref": "refs/heads/main",
+  "after": "dummysha",
+  "repository": {
+    "name": "ts-template",
+    "owner": {
+      "name": "ubiquity"
+    }
+  }
+}

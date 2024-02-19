@@ -37,6 +37,7 @@ runs:
 
     - name: Install Dependencies
       run: |
+        npm install yarn -g
         yarn install
         yarn add wrangler tsx
       shell: bash
