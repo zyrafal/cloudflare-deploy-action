@@ -5,43 +5,50 @@ DEFAULT_BRANCH=$2
 DIST=$3
 CURRENT_BRANCH=$4
 
+
 IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
-# cd "$PROJECT" || exit
 
 echo "PROJECT: $PROJECT"
 echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
 echo "DIST: $DIST"
 
-echo "hard coding repository name for testing"
-echo "before REPOSITORY_NAME: $REPOSITORY_NAME"
+echo "Hard coding repository name for testing"
+echo "Before REPOSITORY_NAME: $REPOSITORY_NAME"
 REPOSITORY_NAME="ts-template"
-echo "after REPOSITORY_NAME: $REPOSITORY_NAME"
+echo "After REPOSITORY_NAME: $REPOSITORY_NAME"
 
-yarn add wrangler -D --frozen-lockfile
 echo "Checking if project exists..."
 
-yarn wrangler pages project list
+CLOUDFLARE_ACCOUNT_ID="17b9dfa79e16b79dffcb11a66768539c"
 
-echo "REPOSITORY_NAME: $REPOSITORY_NAME"
-echo "CURRENT_BRANCH: $CURRENT_BRANCH"
+# Fetch the list of projects and check if the specific project exists
+project_exists=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" | jq -r ".result[] | select(.name == \"$REPOSITORY_NAME\") | .name")
 
-# Fetch the list of projects to a temporary file
-yarn wrangler pages project list >projects_list.txt
-
-# Use grep without -q to search for the repository name, and check the command's exit status
-if grep -F "$REPOSITORY_NAME" projects_list.txt; then
+if [ "$project_exists" == "$REPOSITORY_NAME" ]; then
   echo "Project already exists. Skipping creation..."
 else
   echo "Project does not exist. Creating new project..."
-  yarn wrangler pages project create "$REPOSITORY_NAME" --production-branch "$DEFAULT_BRANCH"
+  # Curl command to create a new project
+  curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
+    -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
-cat projects_list.txt
+# Deployment
+echo "Deploying project..."
 
-# output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
-# output_url="${output_url//$'\n'/%0A}"
-# echo "DEPLOYMENT_URL=$output_url" >>"$GITHUB_ENV"
+curl --request POST \
+  --url "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$REPOSITORY_NAME/deployments" \
+  --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  --header "Content-Type: multipart/form-data" \
+  --form "branch=$CURRENT_BRANCH" \
+  --form "source=@$DIST"
 
-yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true
+# Note: Adjust the `source` form field to point to the actual build output or tarball as required by Cloudflare
+
+echo "Deployment triggered successfully."
