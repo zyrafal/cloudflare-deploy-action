@@ -7,6 +7,10 @@ import { promises as fs } from "fs";
 
 export async function getAppId() {
   try {
+    console.trace("looking in current directory...");
+    printFileStructure("find .").catch(console.error);
+    console.trace("looking up one directory...");
+    printFileStructure("find ..").catch(console.error);
     const data = await fs.readFile("./auth/app-id", "utf8");
     return data.trim();
   } catch (err) {
