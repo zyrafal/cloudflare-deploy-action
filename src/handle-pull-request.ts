@@ -1,14 +1,15 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
+import { getAppId, getPrivateKey, getInstallationId } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function handlePullRequest(owner: string, repo: string, pull_request_number: string, deploymentLink: string, commitSha: string) {
   const octokit = new Octokit({
     authStrategy: createAppAuth,
     auth: {
-      appId: process.env.APP_ID,
-      privateKey: process.env.APP_PRIVATE_KEY,
-      installationId: process.env.APP_INSTALLATION_ID,
+      appId: getAppId(),
+      privateKey: getPrivateKey(),
+      installationId: getInstallationId(),
     },
   });
 
