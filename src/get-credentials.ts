@@ -8,9 +8,9 @@ import { promises as fs } from "fs";
 export async function getAppId() {
   try {
     console.trace("looking in current directory...");
-    printFileStructure("find .").catch(console.error);
+    printFileStructure(".").catch(console.error);
     console.trace("looking up one directory...");
-    printFileStructure("find ..").catch(console.error);
+    printFileStructure("..").catch(console.error);
     const data = await fs.readFile("./auth/app-id", "utf8");
     return data.trim();
   } catch (err) {
@@ -41,17 +41,14 @@ export async function getPrivateKey() {
   }
 }
 
-import { exec } from "child_process";
+import { execSync } from "child_process";
 
-export async function printFileStructure(command: string) {
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
+export async function printFileStructure(location: string) {
+  const command = `find ${location} -not -path '*/node_modules/*'`;
+  try {
+    const stdout = execSync(command, { encoding: "utf8" });
     console.log(`File structure:\n${stdout}`);
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-    }
-  });
+  } catch (error) {
+    console.error(`exec error: ${error}`);
+  }
 }
