@@ -39,10 +39,10 @@ export function handlePullRequest(owner: string, repo: string, pull_request_numb
         });
       } else {
         // If bot comment does not exist, create a new one
-        return octokit.pulls.createReview({
+        return octokit.issues.createComment({
           owner,
           repo,
-          pull_number: Number(pull_request_number),
+          issue_number: Number(pull_request_number),
           body,
         });
       }
