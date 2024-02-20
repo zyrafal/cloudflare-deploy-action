@@ -25,6 +25,7 @@
   "dependencies": {
     "@octokit/app": "^14.0.2",
     "@octokit/rest": "^20.0.2",
+    "glob": "^10.3.10",
     "wrangler": "^3.28.3"
   },
   "devDependencies": {
