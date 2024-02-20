@@ -5,13 +5,11 @@ import { promises as fs } from "fs";
 // for the purposes of assisting pull request reviewers
 // and posting continuous deployment links
 
+import path from "path";
+
 export async function getAppId() {
   try {
-    console.trace("looking in current directory...");
-    printFileStructure(".").catch(console.error);
-    console.trace("looking up one directory...");
-    printFileStructure("..").catch(console.error);
-    const data = await fs.readFile("./auth/app-id", "utf8");
+    const data = await fs.readFile(path.resolve(__dirname, "../auth/app-id"), "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -21,7 +19,7 @@ export async function getAppId() {
 
 export async function getInstallationId() {
   try {
-    const data = await fs.readFile("./auth/installation-id", "utf8");
+    const data = await fs.readFile(path.resolve(__dirname, "../auth/installation-id"), "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -31,9 +29,9 @@ export async function getInstallationId() {
 
 export async function getPrivateKey() {
   try {
-    const files = await fs.readdir("./auth");
+    const files = await fs.readdir(path.resolve(__dirname, "../auth"));
     const pemFile = files.find((file) => file.endsWith(".pem"));
-    const data = pemFile ? await fs.readFile(`../auth/${pemFile}`, "utf8") : null;
+    const data = pemFile ? await fs.readFile(path.resolve(__dirname, `../auth/${pemFile}`), "utf8") : null;
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
