@@ -12,7 +12,7 @@ const AUTH_DIR = "/home/runner/work/_actions/ubiquity/cloudflare-deploy-action/m
 export async function getAppId() {
   try {
     const data = await fs.readFile(path.join(AUTH_DIR, "app-id"), "utf8");
-    return data.trim();
+    return Number(data.trim());
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
     return null;
