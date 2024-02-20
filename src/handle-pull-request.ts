@@ -1,12 +1,12 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
-import { getAppId, getInstallationId, getPrivateKey, printFileStructure } from "./get-credentials";
+import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function handlePullRequest(owner: string, repo: string, pull_request_number: string, deploymentLink: string, commitSha: string) {
-  printFileStructure("find .").catch(console.error);
-  printFileStructure("find ..").catch(console.error);
-  printFileStructure("find ../..").catch(console.error);
+  // printFileStructure("find .").catch(console.error);
+  // printFileStructure("find ..").catch(console.error);
+  // printFileStructure("find ../..").catch(console.error);
 
   const octokit = new Octokit({
     authStrategy: createAppAuth,

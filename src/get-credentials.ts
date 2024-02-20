@@ -7,7 +7,7 @@ import { promises as fs } from "fs";
 
 export async function getAppId() {
   try {
-    const data = await fs.readFile("../auth/app-id", "utf8");
+    const data = await fs.readFile("./auth/app-id", "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -17,7 +17,7 @@ export async function getAppId() {
 
 export async function getInstallationId() {
   try {
-    const data = await fs.readFile("../auth/installation-id", "utf8");
+    const data = await fs.readFile("./auth/installation-id", "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -27,7 +27,7 @@ export async function getInstallationId() {
 
 export async function getPrivateKey() {
   try {
-    const files = await fs.readdir("../auth");
+    const files = await fs.readdir("./auth");
     const pemFile = files.find((file) => file.endsWith(".pem"));
     const data = pemFile ? await fs.readFile(`../auth/${pemFile}`, "utf8") : null;
     return data.trim();
