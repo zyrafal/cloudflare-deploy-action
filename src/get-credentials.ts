@@ -36,3 +36,18 @@ export async function getPrivateKey() {
     return null;
   }
 }
+
+import { exec } from "child_process";
+
+export async function printFileStructure(command: string) {
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`File structure:\n${stdout}`);
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+    }
+  });
+}
