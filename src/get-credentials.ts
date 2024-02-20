@@ -1,5 +1,5 @@
 const ERROR_READING_FILE = "Error reading file:";
-import { promises as fs } from "fs";
+import { readFileSync, readdirSync } from "fs";
 
 // @DEV: these credentials are all disposable and tightly scoped
 // for the purposes of assisting pull request reviewers
@@ -9,21 +9,22 @@ import path from "path";
 
 const AUTH_DIR = "/home/runner/work/_actions/ubiquity/cloudflare-deploy-action/main/auth/";
 
-export async function getAppId() {
+export function getAppId() {
   try {
-    const data = await fs.readFile(path.join(AUTH_DIR, "app-id"), "utf8");
+    const data = readFileSync(path.join(AUTH_DIR, "app-id"), "utf8");
     const trimmed = data.trim();
-    console.trace({ data });
-    return Number(trimmed);
+    const number = Number(trimmed);
+    console.trace({ number });
+    return number;
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
     return null;
   }
 }
 
-export async function getInstallationId() {
+export function getInstallationId() {
   try {
-    const data = await fs.readFile(path.join(AUTH_DIR, "installation-id"), "utf8");
+    const data = readFileSync(path.join(AUTH_DIR, "installation-id"), "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -31,12 +32,12 @@ export async function getInstallationId() {
   }
 }
 
-export async function getPrivateKey() {
+export function getPrivateKey() {
   try {
-    const files = await fs.readdir(path.join(AUTH_DIR, "../auth"));
+    const files = readdirSync(path.join(AUTH_DIR, "../auth"));
     const pemFile = files.find((file) => file.endsWith(".pem"));
-    const data = pemFile ? await fs.readFile(path.join(AUTH_DIR, "${pemFile}"), "utf8") : null;
-    return data.trim();
+    const data = pemFile ? readFileSync(path.join(AUTH_DIR, `${pemFile}`), "utf8") : null;
+    return data ? data.trim() : null;
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
     return null;
@@ -45,12 +46,12 @@ export async function getPrivateKey() {
 
 import { execSync } from "child_process";
 
-export async function printFileStructure(location: string) {
+export function printFileStructure(location: string) {
   const command = `find ${location} -not -path '*/node_modules/*'`;
   try {
     const stdout = execSync(command, { encoding: "utf8" });
     console.log(`File structure:\n${stdout}`);
   } catch (error) {
-    console.error("exec error: ${error}");
+    console.error(`exec error: ${error}`);
   }
 }
