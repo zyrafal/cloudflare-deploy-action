@@ -1,5 +1,6 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
+import { deploysBot } from "./deploys-bot";
 import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -24,7 +25,7 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       commit_sha,
     })
     .then(({ data }) => {
-      const botComment = data.find((comment) => comment.user?.login === "ubiquibot[bot]");
+      const botComment = data.find((comment) => comment.user?.id === deploysBot.id);
       if (botComment) {
         // If bot comment exists, update it
         return octokit.repos.updateCommitComment({
