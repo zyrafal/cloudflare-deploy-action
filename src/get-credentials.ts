@@ -1,5 +1,6 @@
-const ERROR_READING_FILE = "Error reading file:";
+import { execSync } from "child_process";
 import { readFileSync, readdirSync } from "fs";
+const ERROR_READING_FILE = "Error reading file:";
 
 // @DEV: these credentials are all disposable and tightly scoped
 // for the purposes of assisting pull request reviewers
@@ -13,9 +14,7 @@ export function getAppId() {
   try {
     const data = readFileSync(path.join(AUTH_DIR, "app-id"), "utf8");
     const trimmed = data.trim();
-    const number = Number(trimmed);
-    console.trace({ number });
-    return number;
+    return Number(trimmed);
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
     return null;
@@ -43,8 +42,6 @@ export function getPrivateKey() {
     return null;
   }
 }
-
-import { execSync } from "child_process";
 
 export function printFileStructure(location: string) {
   const command = `find ${location} -not -path '*/node_modules/*'`;

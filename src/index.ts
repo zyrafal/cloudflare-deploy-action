@@ -1,4 +1,4 @@
-import { postDeployment } from "./src/post-deployment";
+import { postDeployment } from "./post-deployment";
 
 postDeployment()
   .then(() => console.log("Post deployment tasks have been completed."))

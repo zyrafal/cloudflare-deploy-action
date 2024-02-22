@@ -19,19 +19,10 @@ inputs:
     required: true
   pull_request_number:
     description: "Pull request number for posting the deployment link"
-    required: false
+    required: true
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: false
-  # app_private_key:
-  #   description: "App Private Key"
-  #   required: true
-  # app_id:
-  #   description: "App ID"
-  #   required: true
-  # app_installation_id:
-  #   description: "App Installation ID"
-  #   required: true
 
 runs:
   using: "composite"
@@ -45,14 +36,14 @@ runs:
         fi
 
     - name: Deploy to Cloudflare
-      run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
+      run: bash .github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
 
     - name: Post Deployment on Pull Request or Commit
+      shell: bash
       run: |
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
         yarn add tsx -D
-        yarn tsx post-deployment.ts --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" --repository "${{ inputs.repository }}" --pull_request_number "${{ inputs.pull_request_number }}" --commit_sha "${{ inputs.commit_sha }}"
-      shell: bash
+        yarn tsx src/post-deployment.ts --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" --repository "${{ inputs.repository }}" --pull_request_number "${{ inputs.pull_request_number }}" --commit_sha "${{ inputs.commit_sha }}"
