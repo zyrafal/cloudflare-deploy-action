@@ -1,5 +1,4 @@
 import { getCliParams } from "./get-cli-params";
-import { handleCommit } from "./handle-commit";
 import { handlePullRequest } from "./handle-pull-request";
 import { parseDeploymentLink } from "./parse-deployment-link";
 
@@ -15,7 +14,8 @@ export async function postDeployment() {
   if (pull_request_number) {
     handlePullRequest(owner, repo, pull_request_number, deploymentLink, commit_sha);
   } else if (commit_sha) {
-    handleCommit(owner, repo, commit_sha, deploymentLink);
+    console.info("Skipping commit handling to reduce unnecessary GitHub notifications.");
+    // handleCommit(owner, repo, commit_sha, deploymentLink);
   } else {
     console.error("Either pull_request_number or commit_sha must be provided.");
   }
