@@ -2,9 +2,6 @@ name: "Continuous Deployment to Cloudflare Pages"
 description: "Deploy to Cloudflare Pages"
 
 inputs:
-  cloudflare_api_token:
-    description: "Cloudflare API Token"
-    required: true
   repository:
     description: 'The GitHub repository to deploy, in the format "organization/repository"'
     required: true
@@ -23,9 +20,6 @@ inputs:
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: false
-  # env_vars:
-  #   description: "Environment Variables"
-  #   required: false
 
 runs:
   using: "composite"
