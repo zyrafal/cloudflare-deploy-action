@@ -5,8 +5,6 @@ import { parseDeploymentLink } from "./parse-deployment-link";
 export async function postDeployment() {
   const { deployment_output, repository, pull_request_number, commit_sha } = getCliParams();
 
-  console.trace({ deployment_output, repository, pull_request_number, commit_sha });
-
   const deploymentLink = parseDeploymentLink(deployment_output);
 
   // Split the repository into owner and repo
