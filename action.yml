@@ -2,9 +2,6 @@ name: "Continuous Deployment to Cloudflare Pages"
 description: "Deploy to Cloudflare Pages"
 
 inputs:
-  cloudflare_api_token:
-    description: "Cloudflare API Token"
-    required: true
   repository:
     description: 'The GitHub repository to deploy, in the format "organization/repository"'
     required: true
@@ -52,10 +49,7 @@ runs:
 
     - name: Deploy to Cloudflare
       shell: bash
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
-      # run: bash .github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
 
     - name: Post Deployment on Pull Request or Commit
       shell: bash

@@ -5,8 +5,6 @@ import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function handlePullRequest(owner: string, repo: string, pull_request_number: string, deploymentLink: string, commitSha: string) {
-  console.log({ owner, repo, pull_request_number, deploymentLink, commitSha });
-
   const octokit = new Octokit({
     authStrategy: createAppAuth,
     auth: {
