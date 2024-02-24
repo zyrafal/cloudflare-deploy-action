@@ -45,7 +45,8 @@ runs:
       shell: bash
       run: |
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
-        npx tsx src/index.ts \
+        yarn
+        yarn tsx src/index.ts \
         --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" \
         --repository "${{ inputs.repository }}" \
         --pull_request_number "${{ inputs.pull_request_number }}" \
