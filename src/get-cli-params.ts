@@ -11,7 +11,6 @@ function parseArgs(args: string[]): Record<string, string> {
 }
 
 export function getCliParams() {
-  console.trace({ args: process.argv.slice(2) });
   const args = process.argv.slice(2);
   return parseArgs(args);
 }
