@@ -28,8 +28,11 @@ runs:
       shell: bash
       run: |
         if [ -z "${{ inputs.pull_request_number }}" ] && [ -z "${{ inputs.commit_sha }}" ]; then
-          echo "Error: Either pull_request_number or commit_sha must be provided."
-          exit 1
+          # this is for merged pull requests, which do not contain a commit sha
+          echo "COMMIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
+        else
+          # this is for normal commits on pull requests
+          echo "COMMIT_SHA=${{ inputs.commit_sha }}" >> $GITHUB_ENV
         fi
 
     - name: Deploy to Cloudflare
@@ -42,5 +45,8 @@ runs:
       shell: bash
       run: |
         cd ../../_actions/ubiquity/cloudflare-deploy-action/main
-        yarn add tsx -D
-        yarn tsx src/index.ts --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" --repository "${{ inputs.repository }}" --pull_request_number "${{ inputs.pull_request_number }}" --commit_sha "${{ inputs.commit_sha }}"
+        npx tsx src/index.ts \
+        --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" \
+        --repository "${{ inputs.repository }}" \
+        --pull_request_number "${{ inputs.pull_request_number }}" \
+        --commit_sha "${{ env.COMMIT_SHA }}"
