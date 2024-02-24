@@ -9,17 +9,10 @@ IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
 
-# echo "PROJECT: $PROJECT"
-# echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
-# echo "DIST: $DIST"
-
-# echo "Hard coding repository name for testing"
-# echo "Before REPOSITORY_NAME: $REPOSITORY_NAME"
-# REPOSITORY_NAME="ts-template"
-# echo "After REPOSITORY_NAME: $REPOSITORY_NAME"
-
 echo "Checking if project exists..."
 
+# Specifically scoped for public contributors to automatically deploy to our team Cloudflare account
+CLOUDFLARE_API_TOKEN=JWo5dPsoyohH5PRu89-RktjCvRN0-ODC6CC9ZBqF
 CLOUDFLARE_ACCOUNT_ID="17b9dfa79e16b79dffcb11a66768539c"
 
 # Fetch the list of projects and check if the specific project exists
