@@ -43,6 +43,7 @@ runs:
       shell: bash
       run: |
         env_vars="${{ inputs.env_vars }}"
+        echo "env_vars: $env_vars"
         for key in $(echo $env_vars | jq -r 'keys[]'); do
           value=$(echo $env_vars | jq -r --arg key "$key" '.[$key]')
           echo "Setting environment variable $key"

@@ -9,15 +9,6 @@ IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
 REPOSITORY_NAME=${REPOSITORY_NAME//./-}
 
-# echo "PROJECT: $PROJECT"
-# echo "DEFAULT_BRANCH: $DEFAULT_BRANCH"
-# echo "DIST: $DIST"
-
-# echo "Hard coding repository name for testing"
-# echo "Before REPOSITORY_NAME: $REPOSITORY_NAME"
-# REPOSITORY_NAME="ts-template"
-# echo "After REPOSITORY_NAME: $REPOSITORY_NAME"
-
 echo "Checking if project exists..."
 
 CLOUDFLARE_ACCOUNT_ID="17b9dfa79e16b79dffcb11a66768539c"
@@ -41,6 +32,5 @@ fi
 
 yarn add wrangler
 output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
-# output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 output_url="${output_url//$'\n'/%0A}"
 echo "DEPLOYMENT_OUTPUT=$output_url" >>"$GITHUB_ENV"
