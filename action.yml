@@ -23,10 +23,14 @@ inputs:
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: false
+  env_vars:
+    description: "Environment variables in JSON format"
+    required: false
 
 runs:
   using: "composite"
   steps:
+
     - name: Check for pull_request_number or commit_sha
       shell: bash
       run: |
@@ -34,6 +38,16 @@ runs:
           echo "Error: Either pull_request_number or commit_sha must be provided."
           exit 1
         fi
+
+    - name: Set environment variables
+      shell: bash
+      run: |
+        env_vars="${{ inputs.env_vars }}"
+        for key in $(echo $env_vars | jq -r 'keys[]'); do
+          value=$(echo $env_vars | jq -r --arg key "$key" '.[$key]')
+          echo "Setting environment variable $key"
+          echo "export $key='$value'" >> $GITHUB_ENV
+        done
 
     - name: Deploy to Cloudflare
       shell: bash
