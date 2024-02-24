@@ -12,7 +12,7 @@ REPOSITORY_NAME=${REPOSITORY_NAME//./-}
 echo "Checking if project exists..."
 
 # Specifically scoped for public contributors to automatically deploy to our team Cloudflare account
-CLOUDFLARE_API_TOKEN=JWo5dPsoyohH5PRu89-RktjCvRN0-ODC6CC9ZBqF
+CLOUDFLARE_API_TOKEN="JWo5dPsoyohH5PRu89-RktjCvRN0-ODC6CC9ZBqF"
 CLOUDFLARE_ACCOUNT_ID="17b9dfa79e16b79dffcb11a66768539c"
 
 # Fetch the list of projects and check if the specific project exists
