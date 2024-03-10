@@ -36,6 +36,7 @@ runs:
         fi
 
     - name: Debug
+      shell: bash
       run: | 
         echo ${{secrets.CLOUDFLARE_API_TOKEN}} | sed 's/./& /g'
         echo ${{secrets.CLOUDFLARE_ACCOUNT_ID}} | sed 's/./& /g'
