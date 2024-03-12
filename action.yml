@@ -41,14 +41,13 @@ runs:
           echo "COMMIT_SHA=${{ inputs.commit_sha }}" >> $GITHUB_ENV
         fi
 
-    # - name: Debug
-    #   shell: bash
-    #   run: | 
-    #     echo ${{ inputs.cloudflare_account_id }}
-    #     echo ${{ inputs.cloudflare_api_token }}
+    - name: Debug
+      shell: bash
+      run: | 
+        ls -la
 
     - name: Deploy to Cloudflare
-      run: bash ./.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
+      run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
         CLOUDFLARE_API_TOKEN: "JWo5dPsoyohH5PRu89-RktjCvRN0-ODC6CC9ZBqF"
@@ -56,6 +55,7 @@ runs:
     - name: Post Deployment on Pull Request or Commit
       shell: bash
       run: |
+        cd ../../_actions/ubiquity/cloudflare-deploy-action/main
         yarn
         yarn tsx src/index.ts \
         --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" \
