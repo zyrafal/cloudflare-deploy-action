@@ -45,6 +45,7 @@ runs:
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/ci/debug-secrets/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.cloudflare_account_id }}
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
     - name: Post Deployment on Pull Request or Commit
