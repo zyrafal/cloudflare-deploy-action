@@ -41,11 +41,11 @@ runs:
           echo "COMMIT_SHA=${{ inputs.commit_sha }}" >> $GITHUB_ENV
         fi
 
-    - name: Debug
-      shell: bash
-      run: | 
-        echo ${{ inputs.cloudflare_account_id }}
-        echo ${{ inputs.cloudflare_api_token }}
+    # - name: Debug
+    #   shell: bash
+    #   run: | 
+    #     echo ${{ inputs.cloudflare_account_id }}
+    #     echo ${{ inputs.cloudflare_api_token }}
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
