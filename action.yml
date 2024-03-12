@@ -44,7 +44,7 @@ runs:
     - name: Debug
       shell: bash
       run: | 
-        cd ./.github
+        cd ../../
         ls -la
 
     - name: Deploy to Cloudflare
