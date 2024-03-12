@@ -13,8 +13,6 @@ echo "Checking if project exists..."
 
 # Specifically scoped for public contributors to automatically deploy to our team Cloudflare account
 
-CLOUDFLARE_ACCOUNT_ID="17b9dfa79e16b79dffcb11a66768539c"
-
 # Fetch the list of projects and check if the specific project exists
 project_exists=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
