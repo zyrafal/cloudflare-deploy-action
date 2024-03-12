@@ -17,6 +17,12 @@ inputs:
   pull_request_number:
     description: "Pull request number for posting the deployment link"
     required: true
+  cloudflare_account_id:
+    description: "Cloudflare account id"
+    required: true
+  cloudflare_api_token:
+    description: "Cloudflare API token"
+    required: true
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: false
@@ -38,8 +44,8 @@ runs:
     - name: Debug
       shell: bash
       run: | 
-        echo ${{secrets.CLOUDFLARE_API_TOKEN}} | sed 's/./& /g'
-        echo ${{secrets.CLOUDFLARE_ACCOUNT_ID}} | sed 's/./& /g'
+        echo ${{ inputs.cloudflare_account_id }}
+        echo ${{ inputs.cloudflare_api_token }}
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
