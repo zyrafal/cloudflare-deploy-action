@@ -44,8 +44,8 @@ runs:
     - name: Debug
       shell: bash
       run: | 
-        cd ../../
-        ls -la
+        cd ../../_actions
+        ls -lR
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
