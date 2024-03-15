@@ -41,6 +41,11 @@ runs:
           echo "COMMIT_SHA=${{ inputs.commit_sha }}" >> $GITHUB_ENV
         fi
 
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/ci/debug-secrets/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
