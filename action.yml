@@ -82,4 +82,4 @@ runs:
         --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" \
         --repository "${{ inputs.repository }}" \
         --pull_request_number "${{ steps.pr.outputs.result }}" \
-        --commit_sha "${{ commit_sha.commit_sha }}"
+        --commit_sha "${{ inputs.commit_sha }}"
