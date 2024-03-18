@@ -14,32 +14,58 @@ inputs:
   current_branch:
     description: "Compare if not production branch for preview deploys"
     required: true
-  pull_request_number:
-    description: "Pull request number for posting the deployment link"
+  cloudflare_account_id:
+    description: "Cloudflare account id"
+    required: true
+  cloudflare_api_token:
+    description: "Cloudflare API token"
     required: true
   commit_sha:
     description: "Commit SHA for posting the deployment link"
-    required: false
+    required: true
+  workflow_run_id:
+    description: "Workflow run id which called the action, used for fetching the build artifact"
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Check for pull_request_number or commit_sha
-      shell: bash
-      run: |
-        if [ -z "${{ inputs.pull_request_number }}" ] && [ -z "${{ inputs.commit_sha }}" ]; then
-          # this is for merged pull requests, which do not contain a commit sha
-          echo "COMMIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
-        else
-          # this is for normal commits on pull requests
-          echo "COMMIT_SHA=${{ inputs.commit_sha }}" >> $GITHUB_ENV
-        fi
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.10.0
+
+    - name: Find associated pull request
+      id: pr
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const response = await github.rest.search.issuesAndPullRequests({
+            q: 'repo:${{ inputs.repository }} is:pr sha:${{ inputs.commit_sha }}',
+            per_page: 1,
+          })
+          const items = response.data.items
+          if (items.length < 1) {
+            console.error('No PRs found')
+            return
+          }
+          const pullRequestNumber = items[0].number
+          console.info("Pull request number is", pullRequestNumber)
+          return pullRequestNumber
+
+    - name: Download build artifact
+      uses: dawidd6/action-download-artifact@v3
+      with:
+        name: ${{ inputs.output_directory }}
+        path: ${{ inputs.output_directory }}
+        run_id: ${{ inputs.workflow_run_id }}
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ inputs.current_branch }}"
       shell: bash
       env:
-        CLOUDFLARE_API_TOKEN: "JWo5dPsoyohH5PRu89-RktjCvRN0-ODC6CC9ZBqF"
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.cloudflare_account_id }}
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
     - name: Post Deployment on Pull Request or Commit
       shell: bash
@@ -49,5 +75,5 @@ runs:
         yarn tsx src/index.ts \
         --deployment_output "${{ env.DEPLOYMENT_OUTPUT }}" \
         --repository "${{ inputs.repository }}" \
-        --pull_request_number "${{ inputs.pull_request_number }}" \
-        --commit_sha "${{ env.COMMIT_SHA }}"
+        --pull_request_number "${{ steps.pr.outputs.result }}" \
+        --commit_sha "${{ inputs.commit_sha }}"
