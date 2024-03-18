@@ -8,7 +8,7 @@ const ERROR_READING_FILE = "Error reading file:";
 
 import path from "path";
 
-const AUTH_DIR = "/home/runner/work/_actions/ubiquity/cloudflare-deploy-action/main/auth/";
+const AUTH_DIR = "/home/runner/work/_actions/ubiquity/cloudflare-deploy-action/ci/debug-secrets/auth/";
 
 export function getAppId() {
   try {
