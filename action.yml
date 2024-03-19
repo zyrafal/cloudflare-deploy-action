@@ -8,6 +8,9 @@ inputs:
   production_branch:
     description: "Production Branch"
     required: true
+  build_artifact_name:
+    description: "Github artifact name of the build output file"
+    required: true
   output_directory:
     description: "Output Directory"
     required: true
@@ -56,7 +59,7 @@ runs:
     - name: Download build artifact
       uses: dawidd6/action-download-artifact@v3
       with:
-        name: ${{ inputs.output_directory }}
+        name: ${{ inputs.build_artifact_name }}
         path: ${{ inputs.output_directory }}
         run_id: ${{ inputs.workflow_run_id }}
 
