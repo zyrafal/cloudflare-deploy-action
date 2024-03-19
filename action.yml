@@ -20,12 +20,6 @@ inputs:
   cloudflare_api_token:
     description: "Cloudflare API token"
     required: true
-  cloudflare_account_id:
-    description: "Cloudflare account id"
-    required: true
-  cloudflare_api_token:
-    description: "Cloudflare API token"
-    required: true
   commit_sha:
     description: "Commit SHA for posting the deployment link"
     required: true
