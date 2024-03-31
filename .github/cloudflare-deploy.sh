@@ -31,6 +31,9 @@ fi
 
 
 yarn add wrangler
-output_url=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
-output_url="${output_url//$'\n'/%0A}"
-echo "DEPLOYMENT_OUTPUT=$output_url" >>"$GITHUB_ENV"
+output=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
+output="${output//$'\n'/ }"
+# Extracting URL from output only
+url=$(echo "$output" | grep -o 'https://[^ ]*' | sed 's/ //g')
+echo "DEPLOYMENT_OUTPUT=$output" >> "$GITHUB_ENV"
+echo "DEPLOYMENT_URL=$url" >> "$GITHUB_ENV"
