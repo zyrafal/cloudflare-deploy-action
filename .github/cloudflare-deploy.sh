@@ -29,8 +29,25 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
+if [ -d "$DIST/functions" ]; then
+  echo "Found functions directory. Wrangler will deplooy it as backend."
+  # If the functions directory is present
+  # $DIST/functions directory is expected to contain Cloudflare Pages Functions.
+  # $DIST/$DIST directory is expected to contain static files for Cloudflare Pages.
 
-yarn add wrangler
+  # If there is no functions directory, everything in "$DIST" is
+  # expected to be static files for Cloudflare Pages.
+  # This ensures backward compatibility for existing static-only projects.
+
+  cd "$DIST"
+fi
+
+if [ -f "package.json" ]; then
+  yarn install --ignore-scripts
+else
+  yarn add wrangler
+fi
+
 output=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 output="${output//$'\n'/ }"
 # Extracting URL from output only
