@@ -44,7 +44,7 @@ jobs:
 
 ## Artifact for static-only apps
 This method is not recommended. All new static-only and full-stack apps should use artifact directory structure given above. The old apps should also transition to the new directory structure of the artifact. 
-For backward compatibility, the action also works for static-only project with following artificat. 
+For backward compatibility, the action also works for static-only project with following artifact. 
 
 ```yml
 - name: Upload build artifact
