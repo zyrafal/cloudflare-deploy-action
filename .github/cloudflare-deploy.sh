@@ -4,6 +4,7 @@ PROJECT=$1
 DEFAULT_BRANCH=$2
 DIST=$3
 CURRENT_BRANCH=$4
+STATICS_DIRECTORY=$5
 
 IFS='/' read -ra fields <<<"$PROJECT"
 REPOSITORY_NAME="${fields[1]}"
@@ -29,9 +30,18 @@ else
     --data "{\"name\":\"$REPOSITORY_NAME\",\"production_branch\":\"$DEFAULT_BRANCH\",\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"$DIST\"}}"
 fi
 
+if [[ -z "${STATICS_DIRECTORY}" ]]; then
+  # if STATICS_DIRECTORY input is unspecified then use $DIST as 
+  # STATICS_DIRECTORY treating entire artifact as static-only
+  STATICS_DIRECTORY=$DIST
+else
+  cd "$DIST"
+fi
 
-yarn add wrangler
-output=$(yarn wrangler pages deploy "$DIST" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
+yarn install --ignore-scripts
+yarn add wrangler --ignore-scripts
+
+output=$(yarn wrangler pages deploy "$STATICS_DIRECTORY" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 output="${output//$'\n'/ }"
 # Extracting URL from output only
 url=$(echo "$output" | grep -o 'https://[^ ]*' | sed 's/ //g')
