@@ -28,12 +28,14 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       const botComment = data.find((comment) => comment.user?.id === deploysBot.id);
       if (botComment) {
         // If bot comment exists, update it
-        return octokit.repos.updateCommitComment({
-          owner,
-          repo,
-          comment_id: botComment.id,
-          body: botComment.body + "\n" + body,
-        });
+        if (!botComment.body.includes(body)) {
+          return octokit.repos.updateCommitComment({
+            owner,
+            repo,
+            comment_id: botComment.id,
+            body: botComment.body + "\n" + body,
+          });
+        }        
       } else {
         // If bot comment does not exist, create a new one
         return octokit.repos.createCommitComment({
